@@ -18,10 +18,8 @@ import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.trace.LBSTraceClient;
+import com.baidu.trace.OnEntityListener;
 import com.baidu.trace.OnTrackListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,27 +34,12 @@ public class MainActivity extends Activity {
 	private Marker mMoveMarker;
     private Handler mHandler;
 
-
 	// 通过设置间隔时间和距离可以控制速度和图标移动的距离
 	private static final int TIME_INTERVAL = 80;
 	private static final double DISTANCE = 0.0001;
 
 	// 轨迹服务ID
-	long serviceId = 10000;
-	// entity标识
-	String entityName = "myImei";
-	// 是否返回精简结果
-	int simpleReturn = 0;
-	// 是否纠偏
-	int isProcessed = 0;
-	// 纠偏选项
-	String processOption = null;
-	// 开始时间
-	int startTime = (int)(System.currentTimeMillis()/1000);
-	// 分页大小
-	int pageSize = 5000;
-	// 分页索引
-	int pageIndex = 1;
+    long serviceId = 129306;
 	public static LBSTraceClient client = null;
 
 
@@ -73,7 +56,9 @@ public class MainActivity extends Activity {
 //		initRoadData();
 //		moveLooper();
 		client=new LBSTraceClient(getApplicationContext());
-		queryHistoryTrack();
+		//queryHistoryTrack();
+		findLocationAtTime();
+		findLocationOnHistory();
 	}
 
 	private void initRoadData() {
@@ -295,46 +280,77 @@ public class MainActivity extends Activity {
 		}.start();
 	}
 
-	// 间隔打包周期，轮询调用queryHistoryTrack()
-	private void queryHistoryTrack() {
-		// 结束时间
-		int endTime = (int)(System.currentTimeMillis()/1000);
-
+	/**
+	 * 鹰眼查询历史轨迹
+	 */
+	private void findLocationOnHistory() {
+		//entity标识
+		String entityName = "phone";
+		//是否返回精简的结果（0 : 将只返回经纬度，1 : 将返回经纬度及其他属性信息）
+		int simpleReturn = 1;
+		//开始时间（Unix时间戳）
+		int startTime = (int) (System.currentTimeMillis() / 1000 - 12 * 60 * 60);
+		//结束时间（Unix时间戳）
+		int endTime = (int) (System.currentTimeMillis() / 1000);
+		//分页大小
+		int pageSize = 1000;
+		//分页索引
+		int pageIndex = 1;
+		//轨迹查询监听器
 		OnTrackListener trackListener = new OnTrackListener() {
+			//请求失败回调接口
 			@Override
-			public void onQueryHistoryTrackCallback(String message) {
-				JSONObject data = null;
-				try {
-					data = new JSONObject(message);
-					Log.d(TAG,"data"+data);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				JSONObject endPoint = null;
-				try {
-					endPoint = data. getJSONObject ("end_point");
-					Log.d(TAG,"endpoint"+endPoint);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				//更新startTime，在当前查询的最后一个点的时间戳上加1，作为下一次查询的开始时间
-				try {
-					startTime = endPoint.getInt("loc_time") + 1;
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				// 解析并保存轨迹信息
+			public void onRequestFailedCallback(String arg0) {
+				Log.i(TAG, "onRequestFailedCallback" + "arg0 = " + arg0);
 			}
 
+			// 查询历史轨迹回调接口
 			@Override
-			public void onRequestFailedCallback(String s) {
-				Log.d(TAG,"onRequestFailedCallback");
+			public void onQueryHistoryTrackCallback(String arg0) {
+				Log.i(TAG, "onQueryHistoryTrackCallback" + "arg0 = " + arg0);
+				//解json
+			}
+
+		};
+
+		//查询历史轨迹
+		client.queryHistoryTrack(serviceId, entityName, simpleReturn, startTime, endTime,
+				pageSize, pageIndex, trackListener);
+	}
+	/**
+	 * 鹰眼查询实时位置
+	 */
+	private void findLocationAtTime() {
+		//entity标识列表（多个entityName，以英文逗号"," 分割）
+		String entityNames = "phone";
+		//检索条件（格式为 : "key1=value1,key2=value2,....."）
+		String columnKey = "";
+		//返回结果的类型（0 : 返回全部结果，1 : 只返回entityName的列表）
+		int returnType = 0;
+		//活跃时间，UNIX时间戳（指定该字段时，返回从该时间点之后仍有位置变动的entity的实时点集合）
+		int activeTime = (int) (System.currentTimeMillis() / 1000 - 12 * 60 * 60);
+		//分页大小
+		int pageSize = 1000;
+		//分页索引
+		int pageIndex = 1;
+		//Entity监听器
+		OnEntityListener entityListener = new OnEntityListener() {
+			// 查询失败回调接口
+			@Override
+			public void onRequestFailedCallback(String arg0) {
+				Log.i(TAG, "onRequestFailedCallback" + "arg0 = " + arg0);
+			}
+
+			// 查询entity回调接口，返回查询结果列表
+			@Override
+			public void onQueryEntityListCallback(String arg0) {
+				//位置坐标
+				Log.i(TAG, "onQueryEntityListCallback" + " arg0 = " + arg0);
 			}
 		};
-		// 查询新增的轨迹
-		client.queryHistoryTrack(serviceId , entityName, simpleReturn, isProcessed,
-				processOption, startTime, endTime, pageSize, pageIndex, trackListener);
+
+		//查询实时轨迹
+		client.queryEntityList(serviceId, entityNames, columnKey, returnType, activeTime, pageSize,
+				pageIndex, entityListener);
 	}
-
-
 }

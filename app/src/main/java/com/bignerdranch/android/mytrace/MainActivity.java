@@ -20,6 +20,9 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.OnEntityListener;
 import com.baidu.trace.OnTrackListener;
+import com.bignerdranch.android.model.LocationResult;
+import com.bignerdranch.android.model.Result;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +56,7 @@ public class MainActivity extends Activity {
 		mMapView.onCreate(this, savedInstanceState);
 		mBaiduMap = mMapView.getMap();
         mHandler = new Handler(Looper.getMainLooper());
-//		initRoadData();
+		//initRoadData();
 //		moveLooper();
 		client=new LBSTraceClient(getApplicationContext());
 		//queryHistoryTrack();
@@ -63,8 +66,8 @@ public class MainActivity extends Activity {
 
 	private void initRoadData() {
 		// init latlng data
-		double centerLatitude = 39.916049;
-		double centerLontitude = 116.399792;
+		double centerLatitude = 126.6596070827;// 126.6596070827;
+		double centerLontitude = 45.726225878191;//45.726225878191;
 		double deltaAngle = Math.PI / 180 * 5;
 		double radius = 0.02;
 		OverlayOptions polylineOptions;
@@ -289,9 +292,9 @@ public class MainActivity extends Activity {
 		//是否返回精简的结果（0 : 将只返回经纬度，1 : 将返回经纬度及其他属性信息）
 		int simpleReturn = 1;
 		//开始时间（Unix时间戳）
-		int startTime = (int) (System.currentTimeMillis() / 1000 - 12 * 60 * 60);
+		final int startTime = (int) (System.currentTimeMillis() / 1000 - 12 * 60 * 60);
 		//结束时间（Unix时间戳）
-		int endTime = (int) (System.currentTimeMillis() / 1000);
+		final int endTime = (int) (System.currentTimeMillis() / 1000);
 		//分页大小
 		int pageSize = 1000;
 		//分页索引
@@ -309,6 +312,10 @@ public class MainActivity extends Activity {
 			public void onQueryHistoryTrackCallback(String arg0) {
 				Log.i(TAG, "onQueryHistoryTrackCallback" + "arg0 = " + arg0);
 				//解json
+				Gson gson=new Gson();//GsonBuilder().serializeNulls().create()
+				LocationResult locationResult=gson.fromJson(arg0,LocationResult.class);
+				Log.d(TAG,"onQueryHistoryTrackCallback  "+locationResult.toString());
+
 			}
 
 		};
@@ -316,6 +323,7 @@ public class MainActivity extends Activity {
 		//查询历史轨迹
 		client.queryHistoryTrack(serviceId, entityName, simpleReturn, startTime, endTime,
 				pageSize, pageIndex, trackListener);
+
 	}
 	/**
 	 * 鹰眼查询实时位置
@@ -326,7 +334,7 @@ public class MainActivity extends Activity {
 		//检索条件（格式为 : "key1=value1,key2=value2,....."）
 		String columnKey = "";
 		//返回结果的类型（0 : 返回全部结果，1 : 只返回entityName的列表）
-		int returnType = 0;
+		final int returnType = 0;
 		//活跃时间，UNIX时间戳（指定该字段时，返回从该时间点之后仍有位置变动的entity的实时点集合）
 		int activeTime = (int) (System.currentTimeMillis() / 1000 - 12 * 60 * 60);
 		//分页大小
@@ -339,6 +347,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onRequestFailedCallback(String arg0) {
 				Log.i(TAG, "onRequestFailedCallback" + "arg0 = " + arg0);
+
 			}
 
 			// 查询entity回调接口，返回查询结果列表
@@ -346,11 +355,20 @@ public class MainActivity extends Activity {
 			public void onQueryEntityListCallback(String arg0) {
 				//位置坐标
 				Log.i(TAG, "onQueryEntityListCallback" + " arg0 = " + arg0);
+
+				Gson gson=new Gson() ;//GsonBuilder().serializeNulls().create()
+				Log.d(TAG,"onQueryEntityListCallback "+"here");
+				Result result=gson.fromJson(arg0,Result.class);
+				Log.d(TAG,"onQueryEntityListCallback "+result.toString());
+
 			}
 		};
+
+
 
 		//查询实时轨迹
 		client.queryEntityList(serviceId, entityNames, columnKey, returnType, activeTime, pageSize,
 				pageIndex, entityListener);
 	}
+
 }

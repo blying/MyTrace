@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile files('libs/BaiduTraceSDK_v2_1_15.jar')
     compile files('libs/BaiduLBS_Android.jar')
+    compile files('libs/gson-2.6.2.jar')
 }

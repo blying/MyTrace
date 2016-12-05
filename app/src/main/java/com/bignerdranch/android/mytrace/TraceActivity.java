@@ -18,7 +18,8 @@ public class TraceActivity extends AppCompatActivity {
         mRecordTraceButton=(Button)findViewById(R.id.recordTreaceButton);
         mStopServiceButton=(Button)findViewById(R.id.stopServiceButton);
         final Intent intent=new Intent();
-        intent.setAction("com.bignerdranch.android.mytrace");
+       // intent.setAction("com.bignerdranch.android.mytrace");
+        intent.setClass(TraceActivity.this,MyService.class);
         mRecordTraceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,8 +35,11 @@ public class TraceActivity extends AppCompatActivity {
         mStopServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyService.stopTrace();
-//                stopService(intent);
+              //  MyService.stopTrace();
+                Intent i=new Intent();
+                i.setClass(getApplicationContext(),RecentTraceActivity.class);
+                startActivity(i);
+
             }
         });
 

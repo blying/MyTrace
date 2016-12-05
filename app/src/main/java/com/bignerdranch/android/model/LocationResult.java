@@ -14,7 +14,19 @@ public class LocationResult {
     private double toll_distance;
     private StartPoint start_point;
     private EndPoint end_point;
-    private List<List<Object>>points;
+    private List<List<Double>>points;
+
+    public LocationResult(int status, int size, int total, String entity_name, double distance, double toll_distance, StartPoint start_point, EndPoint end_point, List<List<Double>> points) {
+        this.status = status;
+        this.size = size;
+        this.total = total;
+        this.entity_name = entity_name;
+        this.distance = distance;
+        this.toll_distance = toll_distance;
+        this.start_point = start_point;
+        this.end_point = end_point;
+        this.points = points;
+    }
 
     public void setTotal(int total) {
         this.total = total;
@@ -44,11 +56,11 @@ public class LocationResult {
         this.start_point = start_point;
     }
 
-    public   List<List<Object>> getPoints() {
+    public   List<List<Double>> getPoints() {
         return points;
     }
 
-    public void setPoints( List<List<Object>> points) {
+    public void setPoints( List<List<Double>> points) {
         this.points = points;
     }
 

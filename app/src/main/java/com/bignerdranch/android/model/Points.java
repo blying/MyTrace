@@ -1,72 +1,30 @@
 package com.bignerdranch.android.model;
 
-import java.util.ArrayList;
-
 /**
  * Created by bly on 2016/11/23.
  */
 public class Points {
-    private ArrayList<Double> location;
-    private long loc_time;
-    private String create_time;
-    private int direction;
-    private double height;
-    private double speed;
-    private double radius;
+    private double longitude;//经度
+    private double latitude;//纬度
 
-    public ArrayList<Double> getLocation() {
-        return location;
+    public Points(double latitude , double longitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
-    public void setLocation(ArrayList<Double> location) {
-        this.location = location;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public long getLoc_time() {
-        return loc_time;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public void setLoc_time(long loc_time) {
-        this.loc_time = loc_time;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public String getCreate_time() {
-        return create_time;
-    }
-
-    public void setCreate_time(String create_time) {
-        this.create_time = create_time;
-    }
-
-    public int getDirection() {
-        return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

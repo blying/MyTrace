@@ -1,15 +1,23 @@
 package com.bignerdranch.android.mytrace;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
@@ -21,6 +29,7 @@ import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.OnEntityListener;
 import com.baidu.trace.OnTrackListener;
 import com.bignerdranch.android.model.LocationResult;
+import com.bignerdranch.android.model.Points;
 import com.bignerdranch.android.model.Result;
 import com.google.gson.Gson;
 
@@ -28,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener{
 	private static final String TAG="MainActivity";
 
 	private MapView mMapView;
@@ -36,43 +45,49 @@ public class MainActivity extends Activity {
 	private Polyline mVirtureRoad;
 	private Marker mMoveMarker;
     private Handler mHandler;
+	private Button mAddButton;
 
 	// 通过设置间隔时间和距离可以控制速度和图标移动的距离
+
 	private static final int TIME_INTERVAL = 80;
 	private static final double DISTANCE = 0.0001;
 
 	// 轨迹服务ID
-    long serviceId = 129306;
+    long serviceId = 129914;
 	public static LBSTraceClient client = null;
-
+	private List<Points> mPointsList=new ArrayList<>();
+	private Points mPoints;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
+		mAddButton=(Button)findViewById(R.id.addButton);
 		mMapView = (MapView) findViewById(R.id.bmapView);
-
 		mMapView.onCreate(this, savedInstanceState);
 		mBaiduMap = mMapView.getMap();
         mHandler = new Handler(Looper.getMainLooper());
-		//initRoadData();
-//		moveLooper();
 		client=new LBSTraceClient(getApplicationContext());
-		//queryHistoryTrack();
+		findLocationOnHistory();//查询历史轨迹
 		findLocationAtTime();
-		findLocationOnHistory();
+		mAddButton.setOnClickListener(this);
+
+//		moveLooper();
+
 	}
 
 	private void initRoadData() {
 		// init latlng data
-		double centerLatitude = 126.6596070827;// 126.6596070827;
-		double centerLontitude = 45.726225878191;//45.726225878191;
+		double centerLatitude =45.726225878191;// 126.6596070827;
+		double centerLontitude =126.6596070827;//45.726225878191;//
 		double deltaAngle = Math.PI / 180 * 5;
 		double radius = 0.02;
 		OverlayOptions polylineOptions;
+		List<LatLng>polylines=new ArrayList<>();
 
-        List<LatLng> polylines = new ArrayList<LatLng>();
+//这是轨迹点
+
 		for (double i = 0; i < Math.PI * 2; i = i + deltaAngle) {
 			float latitude = (float) (-Math.cos(i) * radius + centerLatitude);
 			float longtitude = (float) (Math.sin(i) * radius + centerLontitude);
@@ -81,17 +96,12 @@ public class MainActivity extends Activity {
 				deltaAngle = Math.PI / 180 * 30;
 			}
 		}
-
-		float latitude = (float) (-Math.cos(0) * radius + centerLatitude);
-		float longtitude = (float) (Math.sin(0) * radius + centerLontitude);
-        polylines.add(new LatLng(latitude, longtitude));
-
         polylineOptions = new PolylineOptions().points(polylines).width(10).color(Color.RED);
 
 		mVirtureRoad = (Polyline) mBaiduMap.addOverlay(polylineOptions);
 		OverlayOptions markerOptions;
         markerOptions = new MarkerOptions().flat(true).anchor(0.5f, 0.5f).icon(BitmapDescriptorFactory
-                .fromResource(R.mipmap.mark)).position(polylines.get(0)).rotate((float) getAngle(0));
+                .fromResource(R.mipmap.icon_marka)).position(polylines.get(0)).rotate((float) getAngle(0));
 		mMoveMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
 
 	}
@@ -210,20 +220,17 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * 循环进行移动逻辑
+	 * 循环进行移动逻辑 //画轨迹 历史轨迹
 	 */
 	public void moveLooper() {
 		new Thread() {
 
 			public void run() {
-				while (true) {
-
 					for (int i = 0; i < mVirtureRoad.getPoints().size() - 1; i++) {
 
 						final LatLng startPoint = mVirtureRoad.getPoints().get(i);
 						final LatLng endPoint = mVirtureRoad.getPoints().get(i + 1);
-						mMoveMarker
-						.setPosition(startPoint);
+						mMoveMarker.setPosition(startPoint);
 
                         mHandler.post(new Runnable() {
                             @Override
@@ -278,7 +285,7 @@ public class MainActivity extends Activity {
 
 					}
 				}
-			}
+
 
 		}.start();
 	}
@@ -290,7 +297,7 @@ public class MainActivity extends Activity {
 		//entity标识
 		String entityName = "phone";
 		//是否返回精简的结果（0 : 将只返回经纬度，1 : 将返回经纬度及其他属性信息）
-		int simpleReturn = 1;
+		int simpleReturn = 0;
 		//开始时间（Unix时间戳）
 		final int startTime = (int) (System.currentTimeMillis() / 1000 - 12 * 60 * 60);
 		//结束时间（Unix时间戳）
@@ -314,17 +321,45 @@ public class MainActivity extends Activity {
 				//解json
 				Gson gson=new Gson();//GsonBuilder().serializeNulls().create()
 				LocationResult locationResult=gson.fromJson(arg0,LocationResult.class);
-				Log.d(TAG,"onQueryHistoryTrackCallback  "+locationResult.toString());
-
+				//Log.d(TAG,"onQueryHistoryTrackCallback  "+locationResult.toString());
+				Log.d(TAG,"onQueryHistoryTrackCallback size "+locationResult.getSize());
+				List<LatLng> polylines = new ArrayList<LatLng>();
+				for (int i=0;i<locationResult.getSize();i++){
+					//Log.d("TAG2","in for:"+locationResult.getPoints().get(i).get(0));
+					double latitude1=locationResult.getPoints().get(i).get(1);
+					double longtitude1=locationResult.getPoints().get(i).get(0);
+					polylines.add(new LatLng(latitude1,longtitude1));
+					//Log.d("TAG2","onQueryHistoryTrackCallback polylines "+polylines);
+				}
+				Log.d(TAG,"onQueryHistoryTrackCallback polylines "+polylines);
+				upDataLatLng(polylines);
 			}
 
-		};
 
+		};
 		//查询历史轨迹
 		client.queryHistoryTrack(serviceId, entityName, simpleReturn, startTime, endTime,
 				pageSize, pageIndex, trackListener);
+	}
+	private void upDataLatLng(List<LatLng> polylines) {
+		double centerLatitude =45.7262258791;
+		double centerLontitude = 126.6596027;
+		double deltaAngle = Math.PI / 180 * 5;
+		double radius = 0.02;
+		OverlayOptions polylineOptions;
+		Log.d(TAG,"test "+polylines.toString());
+		float latitude = (float) (-Math.cos(0) * radius + centerLatitude);
+		float longtitude = (float) (Math.sin(0) * radius + centerLontitude);
+		polylines.add(new LatLng(latitude, longtitude));
+		polylineOptions = new PolylineOptions().points(polylines).width(10).color(Color.RED);
+		mVirtureRoad = (Polyline) mBaiduMap.addOverlay(polylineOptions);
+		OverlayOptions markerOptions;
+		markerOptions = new MarkerOptions().flat(true).anchor(0.5f, 0.5f).icon(BitmapDescriptorFactory
+				.fromResource(R.mipmap.icon_marka)).position(polylines.get(0)).rotate((float) getAngle(0));
+		mMoveMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
 
 	}
+
 	/**
 	 * 鹰眼查询实时位置
 	 */
@@ -347,28 +382,75 @@ public class MainActivity extends Activity {
 			@Override
 			public void onRequestFailedCallback(String arg0) {
 				Log.i(TAG, "onRequestFailedCallback" + "arg0 = " + arg0);
-
 			}
-
 			// 查询entity回调接口，返回查询结果列表
 			@Override
 			public void onQueryEntityListCallback(String arg0) {
 				//位置坐标
 				Log.i(TAG, "onQueryEntityListCallback" + " arg0 = " + arg0);
-
 				Gson gson=new Gson() ;//GsonBuilder().serializeNulls().create()
 				Log.d(TAG,"onQueryEntityListCallback "+"here");
 				Result result=gson.fromJson(arg0,Result.class);
 				Log.d(TAG,"onQueryEntityListCallback "+result.toString());
-
+				setMapView(new LatLng(result.getEntities().get(0).getRealTimePoints().getLocationPoint().get(1),result.getEntities().get(0).getRealTimePoints().getLocationPoint().get(0)));
 			}
 		};
-
-
-
 		//查询实时轨迹
 		client.queryEntityList(serviceId, entityNames, columnKey, returnType, activeTime, pageSize,
 				pageIndex, entityListener);
+//		moveLooper();
+	}
+	/*
+	 *在地图上标注一点
+	 */
+	public void markPoint(LatLng point){//	LatLng point = new LatLng(45.963175, 126.400244);//定义Maker坐标点
+//构建Marker图标
+		BitmapDescriptor bitmap = BitmapDescriptorFactory
+				.fromResource(R.mipmap.icon_marka);
+//构建MarkerOption，用于在地图上添加Marker
+		OverlayOptions option = new MarkerOptions()
+				.position(point)
+				.icon(bitmap);
+//在地图上添加Marker，并显示
+		mBaiduMap.addOverlay(option);
+	}
+/*
+*定位
+ */
+	public void setMapView(LatLng point){//设定中心点坐标 
+		BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.mipmap.mark);
+	OverlayOptions options = new MarkerOptions().icon(icon).position(point);
+		mBaiduMap.addOverlay(options);
+		//定义地图状态  
+		MapStatus mMapStatus = new MapStatus.Builder().target(point)
+		.zoom(18)
+		.build();
+		//定义MapStatusUpdate对象，以便描述地图状态将要发生的变化  
+		MapStatusUpdate mMapStatusUpdate=MapStatusUpdateFactory.newMapStatus(mMapStatus);
+		//改变地图状态  
+		mBaiduMap.setMapStatus(mMapStatusUpdate);
+	}
+	@Override
+	public void onClick(View view) {
+		int code = 0;
+		Intent intent=new Intent();
+		intent.setClass(this,AddPointActivity.class);
+		intent.putExtra("number",0);//把第几个点传过去
+		mPoints=new Points(45,126);
+		mPointsList.add(mPoints);//把点加到列表里
+		startActivityForResult(intent,code);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK) {
+			//把这个点的其他内容添加进去
+			Toast.makeText(MainActivity.this,"添加成功",Toast.LENGTH_LONG).show();
+			markPoint(new LatLng(mPoints.getLatitude(),mPoints.getLongitude()));//纬度 经度
+		} else if (resultCode==Activity.RESULT_CANCELED){
+			mPointsList.remove(mPointsList.size()-1);
+
+		}
+	}
 }

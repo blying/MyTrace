@@ -26,9 +26,9 @@ public class MyService extends Service {
     protected static Trace trace = null;
 
     // 鹰眼服务ID，开发者创建的鹰眼服务对应的服务ID
-    public static final long serviceId = 129306;
+    public static final long serviceId = 129914;
 
-    String entityName = "mycar";
+    String entityName = "phone";
 
     // 轨迹服务类型
     //0 : 不建立socket长连接，

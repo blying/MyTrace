@@ -2,21 +2,25 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
    >  
-    <include layout="@layout/tool_bar"/>
-    <include layout="@layout/activity_recent_trace">
-
-    </include>
-       
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/tool_bar"/>
+    </LinearLayout>
+    <include layout="@layout/activity_recent_trace"/>
     <android.support.design.widget.NavigationView
-    android:id="@+id/navigation_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="left"
-    android:fitsSystemWindows="true"
-    app:headerLayout="@layout/header_layout"
-    app:menu="@menu/main">
+        android:layout_marginTop="50dp"
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/header_layout"
+        app:menu="@menu/main">
     </android.support.design.widget.NavigationView>
+
     </android.support.v4.widget.DrawerLayout>

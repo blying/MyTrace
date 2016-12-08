@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner">
+        <item>办事</item>
+        <item>旅游</item>
+        <item>日常</item>
+        <item>约会</item>
+    </string-array>
+
+
+
+</resources>

@@ -51,8 +51,10 @@ public class RecentTraceActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getTitle().equals("创建足迹")){
                     Intent intent=new Intent();
-                    intent.setClass(RecentTraceActivity.this,AddPointActivity.class);
+                    intent.setClass(RecentTraceActivity.this,CreateTrace.class);
                     startActivity(intent);
+                    mDrawerLayout.closeDrawers();
+
                 }
                 return false;
             }

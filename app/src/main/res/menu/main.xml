@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/favorite"
+        android:id="@+id/myTrace"
         android:icon="@mipmap/ic_launcher"
-        android:title="创建足迹"/>  
-    <group android:id ="@+id/g2">
+        android:title="排行榜"/> 
     <item
         android:id="@+id/wallet"
         android:icon="@mipmap/ic_launcher"
         android:title="查询足迹"/>  
+    <group android:id ="@+id/g2">
+        <item
+            android:id="@+id/favorite"
+            android:icon="@mipmap/ic_launcher"
+            android:title="创建足迹"/>  
     </group>
     <item
         android:id="@+id/photo"
@@ -18,8 +22,5 @@
         android:id="@+id/file"
         android:icon="@mipmap/ic_launcher"
         android:title="本地足迹"/>  
-    <item
-        android:id="@+id/myTrace"
-        android:icon="@mipmap/ic_launcher"
-        android:title="我的足迹"/> 
+
 </menu>

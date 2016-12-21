@@ -5,8 +5,29 @@
               android:layout_height="match_parent">
     <com.baidu.mapapi.map.MapView
         android:id="@+id/showTraceMap"
+        android:layout_weight="5"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </com.baidu.mapapi.map.MapView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/showLayout"
+        android:layout_height="match_parent"
+        android:background="@mipmap/image"
+        android:animateLayoutChanges="true"
+        android:layout_weight="7">
+
+        <Button
+            android:text="关闭"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/closeButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
 
 </LinearLayout>

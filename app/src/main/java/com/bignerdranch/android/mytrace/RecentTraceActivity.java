@@ -77,15 +77,12 @@ public class RecentTraceActivity extends AppCompatActivity {
                 if (item.getTitle().equals("我的收藏")){
                     //调用本地数据库
                     //添加recyclerView的数据
-
                     mDrawerLayout.closeDrawers();
                     Cursor cursor;
-                    cursor=db.select_trace();
-                    List<String>mNameString=new ArrayList<>();
-                    while(cursor.moveToNext()){
-                        if (cursor.getString(7).equals("1"))
-                            mNameString.add(cursor.getString(1));
-                      //  Log.d("test",cursor.getString(8));
+                    cursor=db.query_mark();
+                    List<String>mNameString=new ArrayList<String>();
+                    while (cursor.moveToNext()){
+                        mNameString.add(cursor.getString(1));
                         adapter.update(mNameString);
                         Log.d("test",mNameString.toString());
                     }

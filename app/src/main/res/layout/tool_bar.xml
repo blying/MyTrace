@@ -4,7 +4,7 @@
     android:id="@+id/tbHeadBar"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="#2f89f7"
+    android:background="@color/colorPrimary"
     >
 
     <TextView

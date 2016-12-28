@@ -39,11 +39,11 @@
 
 
             <CheckBox
-
                 android:layout_marginTop="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/likesButton"
+                android:button="@drawable/like_select_view"
                 android:layout_marginRight="0dp"
                 android:layout_weight="1"/>
 

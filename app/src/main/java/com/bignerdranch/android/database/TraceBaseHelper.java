@@ -39,7 +39,7 @@ public class TraceBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //按照属性创建表
-        String createTraceTable="create table " + TRACETABLE + "("+ "_id primary key " + TRACEID + "," + TRACENAME + "," + CREATETIME + "," + PERSONNAME + "," + LIKENUMBER + "," + TRACEIMAGE + "," + HEADPORTRAIT + ","+TYPE+")";
+        String createTraceTable="create table " + TRACETABLE + "("+  TRACEID + "," + TRACENAME + "," + CREATETIME + "," + PERSONNAME + "," + LIKENUMBER + "," + TRACEIMAGE + "," + HEADPORTRAIT + ","+TYPE+")";
         db.execSQL(createTraceTable);
         String createPointsTable="create table " +POINTSTABLE + "(" +  TRACEID + "," +LATITUDE + "," +LONGITUDE + "," + TEXTSTRING + "," + PHOTOS + "," + VOICE + ")";
         db.execSQL(createPointsTable);

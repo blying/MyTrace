@@ -37,10 +37,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".RecentTraceActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -54,5 +51,12 @@
         <activity android:name=".AddPointActivity"/>
         <activity android:name=".CreateTrace"/>
         <activity android:name=".SearchTraceActivity"/>
+        <activity android:name=".loginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".LoadingActivity"/>
     </application>
 </manifest>

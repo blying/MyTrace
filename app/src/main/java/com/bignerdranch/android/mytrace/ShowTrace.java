@@ -3,6 +3,7 @@ package com.bignerdranch.android.mytrace;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -10,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -22,7 +24,6 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.bignerdranch.android.model.Point;
@@ -137,13 +138,18 @@ public class ShowTrace extends Activity {
     public void markPoints(List<Point>points) {//	LatLng point = new LatLng(45.963175, 126.400244);//定义Maker坐标点
         mMarker=new Marker[points.size()];
         //构建Marker图标
-        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.pushpin1);
+        View view= LayoutInflater.from(ShowTrace.this).inflate(R.layout.pin_view,null);
+        TextView number=(TextView)view.findViewById(R.id.pinNumber);
+
         //构建MarkerOption，用于在地图上添加Marker
         for (int i=0;i<points.size();i++) {
+            number.setText(i+1+"");
+            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromView(view);
             LatLng point = new LatLng(points.get(i).getLatitude(), points.get(i).getLongitude());
-            OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+           // OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+            MarkerOptions option= new MarkerOptions().position(point).icon(bitmap).zIndex(9).draggable(false);//.extraInfo();
             //在地图上添加Marker，并显示
-            mBaiduMap.addOverlay(option);
+            //mBaiduMap.addOverlay(option);
             mMarker[i]=(Marker)(mBaiduMap.addOverlay(option));
 
         }

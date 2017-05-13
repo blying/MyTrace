@@ -23,7 +23,7 @@ public class TraceBaseHelper extends SQLiteOpenHelper {
     public static final String LIKENUMBER="likeNumber";
     public static final String TRACEIMAGE="traceImage";
     public static final String HEADPORTRAIT="headPortrait";
-    public static final String TYPE="type";//收藏是1  本地足迹是2
+    public static final String TYPE="type";//轨迹的类型
 
     public static final String POINTSTABLE="pointsTable";//坐标点表 用traceId将两个表关联
     public static final String LATITUDE = "latitude";//属性列
@@ -31,6 +31,14 @@ public class TraceBaseHelper extends SQLiteOpenHelper {
     public static final String TEXTSTRING = "textString";
     public static final String PHOTOS = "photos";
     public static final String VOICE = "voice";
+
+    public static final String USERTABLE="userTable";//用户表
+    public static final String NICKNAME="nickName";
+    public static final String USERID="userId";
+
+    public static final String COLLECTIONTABLE="collectionTable";//收藏表 包括userId 和 traceId
+
+    public static final String LIKETABLE="likeTable";//点赞表 包括userId 和 traceId
 
     public TraceBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -43,6 +51,12 @@ public class TraceBaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTraceTable);
         String createPointsTable="create table " +POINTSTABLE + "(" +  TRACEID + "," +LATITUDE + "," +LONGITUDE + "," + TEXTSTRING + "," + PHOTOS + "," + VOICE + ")";
         db.execSQL(createPointsTable);
+        String createUserTable="create table "+USERTABLE+"("+NICKNAME+","+USERID+")";
+        db.execSQL(createUserTable);
+        String createCollectionTable="create table"+COLLECTIONTABLE+"("+USERID+","+TRACEID+")";
+        db.execSQL(createCollectionTable);
+        String createLikeTable="create table"+LIKETABLE+"("+USERID+","+TRACEID+")";
+        db.execSQL(createLikeTable);
 
     }
 
@@ -51,6 +65,9 @@ public class TraceBaseHelper extends SQLiteOpenHelper {
         //如果表存在就删除
         db.execSQL("drop if table exists traceTable");
         db.execSQL("drop if table exists  pointsTable");
+        db.execSQL("drop if table exists  userTable");
+        db.execSQL("drop if table exists  collectionTable");
+        db.execSQL("drop if table exists  likeTable");
         onCreate(db);
     }
 
@@ -68,7 +85,7 @@ public class TraceBaseHelper extends SQLiteOpenHelper {
      * 查询TRACETABLE表里type为 1 的所有数据
      * @return
      */
-    public Cursor query_mark(){
+    public Cursor query_type1(){
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor=db.query(true,TRACETABLE,null,"type=?",new String[]{"1"},null,null,null,null);
         return cursor;

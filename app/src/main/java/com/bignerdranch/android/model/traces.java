@@ -20,4 +20,5 @@ public class Traces {
     public void setTraces(List<Trace> Traces) {
         this.mTraces = Traces;
     }
+
 }

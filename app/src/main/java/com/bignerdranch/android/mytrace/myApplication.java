@@ -129,7 +129,7 @@ public class MyApplication extends Application {
         points.add(mPoint);
         mPoint=new Point(46,126);
         points.add(mPoint);
-        mTrace=new Trace("哈尔滨一日游",points,"129");
+        mTrace=new Trace("哈尔滨二日游",points,"129");
         listTrace.add(mTrace);
         //添加到轨迹列表中
         mTraces=new Traces(listTrace);

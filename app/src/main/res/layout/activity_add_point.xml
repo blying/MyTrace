@@ -50,38 +50,124 @@
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
-        <TextView
-            android:text="添加语音描述："
+        <Button
+            android:text="长按添加语音："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:layout_weight="1"/>
+            android:id="@+id/addVoiceButton"
+            />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:id="@+id/voiceOne"/>
+
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/voiceThree"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/voiceTwo"/>
+
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:id="@+id/voiceFour"/>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="wrap_content"
+        android:layout_weight="4">
 
-        <TextView
+        <Button
             android:text="添加照片："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"
+            android:id="@+id/addImageButton"
             android:layout_weight="1"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="134dp"
-            android:background= "@android:drawable/ic_input_add"
-            android:id="@+id/imageView2"
-            android:layout_weight="0.83"/>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/marker"
+                    android:id="@+id/imageOne"
+                    android:visibility="gone"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/marker"
+                    android:id="@+id/imageThree"
+                    android:visibility="gone"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/marker"
+                android:id="@+id/imageTwo"
+                android:visibility="gone"
+                android:layout_weight="1"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/marker"
+                android:visibility="gone"
+                android:id="@+id/imageFour"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        >
 
         <Button
             android:text="完成"

@@ -1,11 +1,12 @@
 package com.bignerdranch.android.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by bly on 2016/11/23.
  */
-public class Point {
+public class Point implements Serializable{
     private String traceId;
     private double latitude;//纬度
     private double longitude;//经度
@@ -72,5 +73,22 @@ public class Point {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+//    public void build(String traceId,double latitude, double longitude, String textString, List<String> photos, String voice) {
+//        this.traceId = traceId;
+//        this.latitude = latitude;
+//        this.longitude = longitude;
+//        this.textString = textString;
+//        this.photos = photos;
+//        this.voice = voice;
+//    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }

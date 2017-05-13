@@ -26,7 +26,6 @@ import com.bignerdranch.android.database.TraceBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by bly on 2016/11/28.
  */
@@ -79,7 +78,7 @@ public class RecentTraceActivity extends AppCompatActivity {
                     //添加recyclerView的数据
                     mDrawerLayout.closeDrawers();
                     Cursor cursor;
-                    cursor=db.query_mark();
+                    cursor=db.query_type1();
                     List<String>mNameString=new ArrayList<String>();
                     while (cursor.moveToNext()){
                         mNameString.add(cursor.getString(1));

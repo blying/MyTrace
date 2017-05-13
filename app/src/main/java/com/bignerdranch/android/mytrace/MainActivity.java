@@ -127,13 +127,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (resultCode == Activity.RESULT_OK) {
             //把这个点的其他内容添加进去
             Toast.makeText(MainActivity.this, "添加成功", Toast.LENGTH_LONG).show();
-
+            Point mPoint=(Point)data.getSerializableExtra("point");
+            String number=data.getStringExtra("number");
+            Log.d(TAG,"point info:"+number+"  "+mPoint);
             MyApplication myApplication=(MyApplication)this.getApplicationContext();
             for (int i=0;i<myApplication.getListTrace().get(0).getPoints().size();i++) {
                 markPoint(new LatLng(myApplication.getListTrace().get(0).getPoints().get(i).getLatitude(),myApplication.getListTrace().get(0).getPoints().get(i).getLongitude()));//纬度 经度
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
-            mPointList.remove(mPointList.size() - 1);
+//            mPointList.remove(mPointList.size() - 1);
 
         }
     }

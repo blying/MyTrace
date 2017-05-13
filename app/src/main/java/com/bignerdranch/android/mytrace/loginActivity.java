@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.squareup.okhttp.OkHttpClient;
+
 /**
  * Created by bly on 2016/12/22.
  */
 
 public class loginActivity extends Activity {
-    private Button mLoginButton;
+  private Button mLoginButton;
+    OkHttpClient mOkHttpClient=new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
